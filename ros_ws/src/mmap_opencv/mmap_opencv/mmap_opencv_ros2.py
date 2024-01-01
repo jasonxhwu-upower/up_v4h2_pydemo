@@ -1,8 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from utils import mmap_v4h
-
+import mmap_opencv.utils
 class MinimalPublisher(Node):
 
     def __init__(self):
