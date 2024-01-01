@@ -1,23 +1,35 @@
 import rclpy
+import cv2 
 from rclpy.node import Node
-from std_msgs.msg import String
+from sensor_msgs.msg import CompressedImage
+from rmw_qos_profiles import rmw_qos_profile_sensor_data
 import mmap_opencv.utils
 class MinimalPublisher(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'topic', 10)
-        timer_period = 0.001  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
+        #QOS profile
+        qos_profile = rmw_qos_profile_sensor_data
+        qos_profile.reliability = rmw_qos_reliability_policy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT
+        qos_profile.durability = rmw_qos_durability_policy.DurabilityVolatile
+        qos_profile.deadline = {'sec': 0, 'nsec': int(1e8)}  # 100 milliseconds
+        qos_profile.lifespan = qos_profile.deadline
+        qos_profile.history = rmw_qos_history_policy.KeepLast
+        qos_profile.depth = 1  # Keep only the latest message
+
+        #publisher
+        self.publisher_ = self.create_publisher(CompressedImage, 'v4h_topic', 10)
+        self.timer = self.create_timer(0, self.timer_callback)
+        
+        #timer callback counter
         self.i = 0
 
     def timer_callback(self):
-        msg = String()
-        msg.data = 'Hello World: %d' % self.i
-        self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
-        #self.mmap_main() # uncomment this line to run mmap_opencv function
+        msg = CompressedImage()
+        msg.format = 'jpeg'
+        msg.data = mmap_opencv.utils.read_frontcam_membuf().tobytes
+        self.get_logger().info('Publishing Image: "%d"' % self.i)
 
 def main(args=None):
     rclpy.init(args=args)
