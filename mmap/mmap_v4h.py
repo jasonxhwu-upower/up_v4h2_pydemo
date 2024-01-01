@@ -38,7 +38,7 @@ def convert_yuv_to_rgb(yuv_image):
     rgb_image = cv2.cvtColor(yuv_image, cv2.COLOR_YUV2RGB_YUYV)
     return rgb_image
 
-def dummy_test()
+def dummy_test():
     while True:
         uyvy_values = read_frontcam_membuf()
         rgb_image = convert_yuv_to_bgr(uyvy_values)
