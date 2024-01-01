@@ -1,23 +1,21 @@
 import rclpy
 import cv2 
 from rclpy.node import Node
-from rclpy.qos import QoSProfile
+from rclpy.qos import QoSProfile, HistoryPolicy, DurabilityPolicy, ReliabilityPolicy
 from sensor_msgs.msg import CompressedImage
-import mmap_opencv.utils
+import mmap_opencv.utils.mmap_v4h as mmap_utils
 class MinimalPublisher(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        
         qos_profile = QoSProfile(
-            depth=1,                # Set the depth of the message queue
-            reliability=QoSProfile.BEST_EFFORT,  # Use RELIABLE or BEST_EFFORT
-            durability=QoSProfile.VOLATILE,  # Use VOLATILE for no message history
-            history=QoSProfile.KEEP_LAST,  # Use KEEP_ALL to keep all messages
+            depth=1,
+            history=HistoryPolicy.KEEP_LAST,
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.VOLATILE
         )
-
         #publisher
-        self.publisher_ = self.create_publisher(CompressedImage, 'v4h_topic', QoSProfile)
+        self.publisher_ = self.create_publisher(CompressedImage, 'v4h_topic', 10)
         self.timer = self.create_timer(0, self.timer_callback)
         
         #timer callback counter
@@ -27,7 +25,7 @@ class MinimalPublisher(Node):
         self.i += 1
         msg = CompressedImage()
         msg.format = 'jpeg'
-        msg.data = mmap_opencv.utils.read_frontcam_membuf().tobytes
+        msg.data = mmap_utils.read_frontcam_membuf().tobytes
         self.get_logger().info('Publishing Image: "%d"' % self.i)
 
 def main(args=None):
