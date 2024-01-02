@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'mmap_opencv'
+package_name = 'v4h_relay'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-                'mmap_opencv_ros2_node = mmap_opencv.mmap_opencv_ros2:main',
+                'v4h_relay_ros2_node = v4h_relay.v4h_relay_ros2:main',
         ],
     },
 )
