@@ -6,13 +6,20 @@ from sensor_msgs.msg import CompressedImage
 
 class orin_relay(Node):
     def __init__(self):
-        super().__init__('minimal_publisher')
+        super().__init__('minimal_subscriber')
         qos_profile = QoSProfile(
             depth=1,
             history=HistoryPolicy.KEEP_LAST,
             reliability=ReliabilityPolicy.BEST_EFFORT,
             durability=DurabilityPolicy.VOLATILE
         )
+        #subscriber
+        self.subscription = self.create_subscription(CompressedImage, '/v4h_topic', self.listener_callback, qos_profile)
+        self.subscription  # prevent unused variable warning
+
+    def listener_callback(self, msg):
+        test_data = msg.data[:15]
+        self.get_logger().info('The image is: "%s"...' % test_data)
 
 def main(args=None):
     rclpy.init(args=args)
