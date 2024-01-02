@@ -1,5 +1,4 @@
 import rclpy
-import cv2 
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, HistoryPolicy, DurabilityPolicy, ReliabilityPolicy
 from sensor_msgs.msg import CompressedImage
@@ -22,15 +21,16 @@ class v4h2_relay(Node):
         self.i = 0
 
     def timer_callback(self):
-        self.i += 1
         msg = CompressedImage()
         msg.format = 'jpeg'
         msg.data = mmap_utils.read_frontcam_membuf().tobytes()
+        self.publisher_.publish(msg)
+        self.i += 1
         
-
     def count_fps(self):
         self.get_logger().info('Number of frames published per second: %d' % self.i)
         self.i = 30
+
 def main(args=None):
     rclpy.init(args=args)
 
