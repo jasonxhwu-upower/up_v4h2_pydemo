@@ -14,7 +14,7 @@ class v4h2_relay(Node):
             durability=DurabilityPolicy.VOLATILE
         )
         #publisher
-        self.publisher_ = self.create_publisher(CompressedImage, 'v4h_topic', 10)
+        self.publisher_ = self.create_publisher(CompressedImage, 'v4h_topic', qos_profile)
         self.timer = self.create_timer(0, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
