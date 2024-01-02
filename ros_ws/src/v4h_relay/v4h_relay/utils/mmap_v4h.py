@@ -25,7 +25,19 @@ def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/im
     
     if jpeg_compression:
         return ocv_jpeg_conversion(image_data)
-    return image_data
+    return image_data.data
+
+def write_frontcam_membuf(data, width=1280, height=720, path='', bgr=True, jpeg_compression=True):
+    numpy_array = np.frombuffer(data, np.uint8)
+
+    if jpeg_compression:
+        # Check if it's already an image array
+        if not isinstance(numpy_array[0], np.uint8):
+            numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+
+    with open(path, 'wb') as file:
+        file.write(numpy_array.data.tobytes())
+
 '''
 Summary: Simple function to convert YUYV NP Array/OCV Mat to BGR
 Return Type: OpenCV BGR Mat
@@ -48,12 +60,3 @@ def ocv_jpeg_conversion(image_data):
     compressed_image = cv2.imencode('.jpg', image_data)[1]
     return compressed_image
 
-def dummy_test():
-    while True:
-        uyvy_values = read_frontcam_membuf()
-        rgb_image = convert_yuv_to_bgr(uyvy_values)
-        #cv2.imwrite(jpeg_filename, rgb_image)
-        cv2.imshow("Image", rgb_image)
-        cv2.waitKey(1)
-
-    cv2.destroyAllWindows()
