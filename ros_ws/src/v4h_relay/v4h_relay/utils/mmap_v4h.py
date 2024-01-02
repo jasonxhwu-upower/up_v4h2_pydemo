@@ -56,7 +56,7 @@ def convert_yuv_to_rgb(yuv_image):
     rgb_image = cv2.cvtColor(yuv_image, cv2.COLOR_YUV2RGB_YUYV)
     return rgb_image
 
-def ocv_jpeg_conversion(image_data):
-    compressed_image = cv2.imencode('.jpg', image_data)[1]
+def ocv_jpeg_conversion(image_data, quality=80):
+    compressed_image = cv2.imencode('.jpg', image_data, [int(cv2.IMWRITE_JPEG_QUALITY), quality])[1]
     return compressed_image
 
