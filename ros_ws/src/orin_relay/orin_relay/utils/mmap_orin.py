@@ -30,7 +30,7 @@ def close_from_v4h2_mmap():
     mmap_file_v4h.close()
 
 #orin publisher. Reads mmap, compresses data, and then sends it back to the v4h
-def read_orin_mmap(width=1280, height=720, path='/home/nvidia/mmap_exchange/orin_to_v4h2.dat', bgr=True, jpeg_compression=True):
+def orin_pub_mmap(width=1280, height=720, jpeg_compression=True):
     #reads the data from the mmap buffer that is opened. 
     data = mmap_file_inference.read()
     #put into np and then reshape into 3 channels
@@ -41,7 +41,7 @@ def read_orin_mmap(width=1280, height=720, path='/home/nvidia/mmap_exchange/orin
     return numpy_array.data
 
 #orin subscriber. Takes the ros2 data, decompresses it, and then writes it to mmap
-def write_orin_mmap(data, width=1280, height=720, bgr=True, jpeg_compression=True):
+def orin_sub_mmap(data, width=1280, height=720, jpeg_compression=True):
     #reads in compressed rgb data
     numpy_array = np.frombuffer(data, np.uint8).reshape((height, width, 3))
     if jpeg_compression:
