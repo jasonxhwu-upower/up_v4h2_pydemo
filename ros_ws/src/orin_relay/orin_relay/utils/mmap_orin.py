@@ -3,6 +3,7 @@ import numpy as np
 import mmap
 import os
 import array
+import time
 import threading
 size = 1280 * 720 * 3
 
@@ -38,6 +39,8 @@ def open_orin_inference_mmap():
         except (FileNotFoundError, OSError) as e:
             print(f"Error: {e}")
             attempts += 1
+        time.sleep(0.025)
+            
 
 # writes the mmap from v4h => orin. Used by orin_sub
 def open_from_v4h2_mmap():
@@ -48,7 +51,7 @@ def open_from_v4h2_mmap():
         mmap_file_v4h = mmap.mmap(file_v4h, size, mmap.MAP_SHARED, mmap.PROT_WRITE)
     except OSError as e:
         print(f"Error: {e}")
-
+    
 # closes the mmap from inferencing
 def close_orin_inference_mmap():
     mmap_file_inference.close()

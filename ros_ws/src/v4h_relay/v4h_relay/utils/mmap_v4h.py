@@ -58,9 +58,11 @@ def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/im
     compressed = cv2.imencode('.jpg', image_data, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
     return array.array('B', compressed.tobytes())
 
-def write_frontcam_membuf(data, width=1280, height=720):
-    numpy_array = np.frombuffer(data, np.uint8)
+def frontcam_sub_create():
+    cv2.namedWindow("Video", cv2.WINDOW_NORMAL)
 
+def frontcam_sub_close():
+    cv2.destroyWindow("Video")
 
 def frontcam_sub_show(data):
     numpy_array = np.frombuffer(data, np.uint8)

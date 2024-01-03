@@ -15,7 +15,6 @@ class orin_relay_sub(Node):
             durability=DurabilityPolicy.VOLATILE
         )
         self.subscription = self.create_subscription(CompressedImage, '/v4h2_to_orin', self.listener_callback, qos_profile)
-
         self.mmap_handle = mmap_utils.open_from_v4h2_mmap()
 
     def listener_callback(self, msg):

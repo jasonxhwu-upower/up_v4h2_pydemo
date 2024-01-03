@@ -48,11 +48,15 @@ class v4h2_relay_sub(Node):
             reliability=ReliabilityPolicy.BEST_EFFORT,
             durability=DurabilityPolicy.VOLATILE
         )
-        
+        mmap_utils.frontcam_sub_create()
         self.subscription = self.create_subscription(CompressedImage, '/orin_to_v4h2', self.listener_callback, qos_profile)
     
     def listener_callback(self, msg):
         mmap_utils.frontcam_sub_show(msg.data)
+
+    def destroy_node(self):
+        mmap_utils.frontcam_sub_close()
+        return super().destroy_node()
 def main(args=None):
     rclpy.init(args=args)
     executor = rclpy.executors.MultiThreadedExecutor()
