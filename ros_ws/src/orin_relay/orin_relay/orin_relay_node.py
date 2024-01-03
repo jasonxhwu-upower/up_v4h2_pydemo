@@ -15,14 +15,15 @@ class orin_relay_sub(Node):
         )
         #subscriber
         self.subscription = self.create_subscription(CompressedImage, '/v4h2_to_orin', self.listener_callback, qos_profile)
-        mmap_utils.open_from_v4h2_mmap()
+        #mmap_utils.open_from_v4h2_mmap()
 
     def listener_callback(self, msg):
-        msg_data = mmap_utils.orin_sub_mmap(msg)
+        self.get_logger().info("recieved:")
+        msg_data = mmap_utils.orin_sub_mmap(msg.data)
 
-    def destroy_node(self):
-        mmap_utils.close_from_v4h2_mmap()
-        super().destroy_node()
+    #def destroy_node(self):
+    #    mmap_utils.close_from_v4h2_mmap()
+    #    super().destroy_node()
 
 class orin_relay_pub(Node):
     def __init__(self):
@@ -60,18 +61,14 @@ class orin_relay_pub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.MultiThreadedExecutor()
+    executor = rclpy.executors.SingleThreadedExecutor()
     #orin_pub = orin_relay_pub()
     orin_sub = orin_relay_sub()
 
     #executor.add_node(orin_pub)
     executor.add_node(orin_sub)
 
-    try:
-        while rclpy.ok():
-            executor.spin_once()
-    except:
-        pass
+    executor.spin()
     
     #orin_pub.destroy_node()
     orin_sub.destroy_node()

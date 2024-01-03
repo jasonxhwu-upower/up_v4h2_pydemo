@@ -15,7 +15,7 @@ class v4h2_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/v4h2_to_orin', qos_profile)
-        self.timer = self.create_timer(0, self.timer_callback)
+        self.timer = self.create_timer(0.005, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
@@ -23,7 +23,7 @@ class v4h2_relay_pub(Node):
     def timer_callback(self):
         msg = CompressedImage()
         msg.format = 'jpeg'
-        msg.data = mmap_utils.read_frontcam_membuf().tobytes()
+        msg.data = mmap_utils.read_frontcam_membuf()
         self.publisher_.publish(msg)
         self.i += 1
         
@@ -50,16 +50,15 @@ class v4h2_relay_sub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.MultiThreadedExecutor()
+    executor = rclpy.executors.SingleThreadedExecutor()
     v4h2_pub = v4h2_relay_pub()
     v4h2_sub = v4h2_relay_sub()
 
     executor.add_node(v4h2_pub)
     executor.add_node(v4h2_sub)
-
+    #rclpy.spin(v4h2_pub)
     try:
-        while rclpy.ok():
-            executor.spin_once()
+        executor.spin()
     except KeyboardInterrupt:
         pass
 
