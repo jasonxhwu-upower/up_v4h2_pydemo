@@ -43,7 +43,6 @@ def open_from_v4h2_mmap():
         file_v4h = os.open(mmap_v4h_path, os.O_CREAT | os.O_TRUNC | os.O_RDWR)
         os.truncate(file_v4h, size)
         mmap_file_v4h = mmap.mmap(file_v4h, size, mmap.MAP_SHARED, mmap.PROT_WRITE)
-        print("open mmap call")
     except OSError as e:
         print(f"Error: {e}")
 
@@ -76,7 +75,7 @@ def orin_pub_mmap(width=1280, height=720):
     #print(numpy_array.size)
     #print(numpy_array.shape)
     compressed = cv2.imencode('.jpg', numpy_array, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
-    return array.array('B',compressed)
+    return compressed
     
 #orin subscriber. Takes the ros2 data, decompresses it, and then writes it to mmap
 def orin_sub_mmap(data):
