@@ -3,11 +3,12 @@ import numpy as np
 import mmap
 import os
 import array
-
+import threading
 size = 1280 * 720 * 3
 
 # Used by orin_pub
-mmap_inf_path = '/home/nvidia/mmap_exchange/orin_to_v4h2.dat'
+#mmap_inf_path = '/home/nvidia/mmap_exchange/orin_to_v4h2.dat'
+mmap_inf_path = '/home/nvidia/mmap_exchange/v4h2_to_orin.dat'
 # Used by orin_sub
 mmap_v4h_path = '/home/nvidia/mmap_exchange/v4h2_to_orin.dat'
 
@@ -16,6 +17,8 @@ mmap_file_inference = None
 mmap_file_v4h = None
 file_inference = None
 file_v4h = None
+
+thread_lock = threading.RLock()
 
 # reads the mmap produced by inferencing. Used by orin_pub
 def open_orin_inference_mmap():
@@ -64,8 +67,9 @@ def close_from_v4h2_mmap():
 
 #orin publisher. Reads mmap, compresses data, and then returns a compressed image to send back to the v4h
 def orin_pub_mmap(width=1280, height=720):
-    mmap_file_inference.seek(0)
-    data = mmap_file_inference.read()
+    with thread_lock:
+        mmap_file_inference.seek(0)
+        data = mmap_file_inference.read()
     if not data:
         print(f"Warning: mmap from inferencing is empty")
         numpy_array = np.zeros((height, width, 3), dtype=np.uint8)
@@ -84,5 +88,6 @@ def orin_sub_mmap(data):
     """ print("orin_subscriber")
     print(numpy_array.size)
     print(numpy_array.shape) """
-    mmap_file_v4h.seek(0)
-    mmap_file_v4h.write(numpy_array.data)
+    with thread_lock:
+        mmap_file_v4h.seek(0)
+        mmap_file_v4h.write(numpy_array.data)

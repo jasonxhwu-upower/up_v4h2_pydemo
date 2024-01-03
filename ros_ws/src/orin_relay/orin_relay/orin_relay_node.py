@@ -38,7 +38,7 @@ class orin_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/orin_to_v4h2', qos_profile)
-        self.timer = self.create_timer(0.010, self.timer_callback)
+        self.timer = self.create_timer(0.033, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
@@ -62,19 +62,19 @@ class orin_relay_pub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.SingleThreadedExecutor()
+    executor = rclpy.executors.MultiThreadedExecutor()
     orin_pub = orin_relay_pub()
     orin_sub = orin_relay_sub()
 
     executor.add_node(orin_pub)
     executor.add_node(orin_sub)
 
-    executor.spin()
+    #executor.spin()
     
-    """ try:
+    try:
         executor.spin()
     except KeyboardInterrupt:
-        pass """
+        pass 
 
     orin_pub.destroy_node()
     orin_sub.destroy_node()

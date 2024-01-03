@@ -16,7 +16,7 @@ class v4h2_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/v4h2_to_orin', qos_profile)
-        self.timer = self.create_timer(0.010, self.timer_callback)
+        self.timer = self.create_timer(0.033, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
@@ -55,17 +55,16 @@ class v4h2_relay_sub(Node):
         mmap_utils.frontcam_sub_show(msg.data)
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.SingleThreadedExecutor()
+    executor = rclpy.executors.MultiThreadedExecutor()
     v4h2_pub = v4h2_relay_pub()
     v4h2_sub = v4h2_relay_sub()
 
     executor.add_node(v4h2_pub)
     executor.add_node(v4h2_sub)
-    """ try:
+    try:
         executor.spin()
     except KeyboardInterrupt:
-        pass """
-    executor.spin()
+        pass 
 
     v4h2_pub.destroy_node()
     v4h2_sub.destroy_node()

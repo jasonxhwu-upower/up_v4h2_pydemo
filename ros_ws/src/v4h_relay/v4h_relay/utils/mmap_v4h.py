@@ -4,11 +4,14 @@ import numpy as np
 import mmap
 import time
 import array
+import threading
 
 mmap_file_path = '/home/ubuntu/front_cam/image_buffer_out.dat'
 mmap_frontcam = None
 file_handle = None
 size = 1280 * 720 * 2
+
+thread_lock = threading.RLock()
 
 def open_frontcam_mmap():
     global mmap_frontcam, file_handle
@@ -42,8 +45,9 @@ def close_frontcam_mmap():
               
 
 def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/image_buffer_out.dat', bgr=True):
-    mmap_frontcam.seek(0)
-    data = mmap_frontcam.read()
+    with thread_lock:
+        mmap_frontcam.seek(0)
+        data = mmap_frontcam.read()
     numpy_array = np.frombuffer(data, dtype=np.uint8)
     #numpy_array = np.clip(numpy_array, 0, 255)
     numpy_array = numpy_array.reshape((height, width, 2))
@@ -64,5 +68,5 @@ def frontcam_sub_show(data):
     """ print("v4h_subscriber")
     print(numpy_array.shape)
     print(numpy_array.size) """
-    cv2.imshow("Image.jpg", numpy_array)
+    cv2.imshow("Video", numpy_array)
     cv2.waitKey(1)
