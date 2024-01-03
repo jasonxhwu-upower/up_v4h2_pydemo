@@ -1,13 +1,31 @@
 import cv2
+import os
 import numpy as np
 import mmap
 
+mmap_file_path = '/home/ubuntu/front_cam/image_buffer_out.dat'
+mmap_frontcam = None
+file_handle = None
+
+def open_frontcam_mmap():
+    global mmap_frontcam, file_handle
+    try:
+        file_handle = os.open(mmap_file_path, os.O_RDONLY)
+        mmap_frontcam = mmap.mmap(file_handle, 0, mmap.MAP_SHARED, mmap.PROT_READ)
+    except Exception as e:
+        print(f"Error: {e}")
+
+def close_frontcam_mmap():
+    mmap_frontcam.close()
+    try:
+        os.close(file_handle)
+    except Exception as e:
+        print(f"Error: {e}")
+              
+
 def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/image_buffer_out.dat', bgr=True):
-    with open(path, "r+b") as f:
-        mmapped_file = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
-        data = mmapped_file.read()
-        mmapped_file.close()
-        
+    mmap_frontcam.seek(0)
+    data = mmap_frontcam.read()
     numpy_array = np.frombuffer(data, dtype=np.uint8).reshape((height, width, 2))
 
     if bgr:

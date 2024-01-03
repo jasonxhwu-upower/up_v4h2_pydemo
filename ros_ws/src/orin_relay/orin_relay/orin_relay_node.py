@@ -23,7 +23,7 @@ class orin_relay_sub(Node):
 
     def destroy_node(self):
         mmap_utils.close_from_v4h2_mmap
-        super().destroy_node()
+        return super().destroy_node() 
 
 class orin_relay_pub(Node):
     def __init__(self):
@@ -57,7 +57,7 @@ class orin_relay_pub(Node):
     
     def destroy_node(self):
         mmap_utils.close_orin_inference_mmap
-        super().destroy_node()
+        return super().destroy_node() 
 
 def main(args=None):
     rclpy.init(args=args)

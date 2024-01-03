@@ -53,6 +53,7 @@ def close_from_v4h2_mmap():
 
 #orin publisher. Reads mmap, compresses data, and then returns a compressed image to send back to the v4h
 def orin_pub_mmap(width=1280, height=720):
+    mmap_file_inference.seek(0)
     data = mmap_file_inference.read()
     if not data:
         print(f"Warning: mmap from inferencing is empty")
@@ -67,4 +68,3 @@ def orin_sub_mmap(data):
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
     mmap_file_v4h.seek(0)
     mmap_file_v4h.write(numpy_array.data)
-    mmap_file_v4h.flush()

@@ -20,6 +20,8 @@ class v4h2_relay_pub(Node):
         #timer callback counter
         self.i = 0
 
+        mmap_utils.open_frontcam_mmap()
+
     def timer_callback(self):
         msg = CompressedImage()
         msg.format = 'jpeg'
@@ -31,6 +33,10 @@ class v4h2_relay_pub(Node):
         self.get_logger().info('Number of frames published per second: %d' % self.i)
         self.i = 0
 
+    def destroy_node(self):
+        mmap_utils.close_frontcam_mmap()
+        return super().destroy_node()
+    
 class v4h2_relay_sub(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
