@@ -65,10 +65,12 @@ def frontcam_sub_close():
     cv2.destroyWindow("Video")
 
 def frontcam_sub_show(data):
+    
     numpy_array = np.frombuffer(data, np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
     """ print("v4h_subscriber")
     print(numpy_array.shape)
     print(numpy_array.size) """
-    cv2.imshow("Video", numpy_array)
-    cv2.waitKey(1)
+    with thread_lock:
+        cv2.imshow("Video", numpy_array)
+        cv2.waitKey(1)
