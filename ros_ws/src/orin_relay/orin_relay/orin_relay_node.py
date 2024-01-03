@@ -16,7 +16,7 @@ class orin_relay_sub(Node):
         )
         self.subscription = self.create_subscription(CompressedImage, '/v4h2_to_orin', self.listener_callback, qos_profile)
 
-        mmap_utils.open_from_v4h2_mmap()
+        self.mmap_handle = mmap_utils.open_from_v4h2_mmap()
 
     def listener_callback(self, msg):
         #self.get_logger().info("recieved:")
@@ -38,12 +38,12 @@ class orin_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/orin_to_v4h2', qos_profile)
-        self.timer = self.create_timer(0.033, self.timer_callback)
+        self.timer = self.create_timer(0.010, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
 
-        mmap_utils.open_orin_inference_mmap()
+        self.mmap_handle = mmap_utils.open_orin_inference_mmap()
     
     def timer_callback(self):
         msg = CompressedImage()

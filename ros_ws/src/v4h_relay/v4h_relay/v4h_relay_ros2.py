@@ -16,12 +16,12 @@ class v4h2_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/v4h2_to_orin', qos_profile)
-        self.timer = self.create_timer(0.033, self.timer_callback)
+        self.timer = self.create_timer(0.010, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
 
-        mmap_utils.open_frontcam_mmap()
+        self.mmap_handle = mmap_utils.open_frontcam_mmap()
 
     def timer_callback(self):
         msg = CompressedImage()
