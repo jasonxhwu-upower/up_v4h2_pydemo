@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import mmap
 import os
-import array
 
 size = 1280 * 720 * 3
 
