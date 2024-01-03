@@ -15,7 +15,7 @@ class v4h2_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/v4h2_to_orin', qos_profile)
-        self.timer = self.create_timer(0.005, self.timer_callback)
+        self.timer = self.create_timer(0.02, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0
@@ -45,9 +45,7 @@ class v4h2_relay_sub(Node):
         self.subscription = self.create_subscription(CompressedImage, '/orin_to_v4h2', self.listener_callback, qos_profile)
     
     def listener_callback(self, msg):
-        test_data = msg.data[:15]
-        self.get_logger().info('The image is: "%s"...' % test_data)
-
+        pass
 def main(args=None):
     rclpy.init(args=args)
     executor = rclpy.executors.SingleThreadedExecutor()
@@ -56,11 +54,11 @@ def main(args=None):
 
     executor.add_node(v4h2_pub)
     executor.add_node(v4h2_sub)
-    #rclpy.spin(v4h2_pub)
-    try:
+    """ try:
         executor.spin()
     except KeyboardInterrupt:
-        pass
+        pass """
+    executor.spin()
 
     v4h2_pub.destroy_node()
     v4h2_sub.destroy_node()
