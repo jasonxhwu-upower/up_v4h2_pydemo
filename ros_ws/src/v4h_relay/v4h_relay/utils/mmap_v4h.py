@@ -38,3 +38,12 @@ def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/im
 def write_frontcam_membuf(data, width=1280, height=720):
     numpy_array = np.frombuffer(data, np.uint8)
 
+
+def frontcam_sub_show(data):
+    numpy_array = np.frombuffer(data, np.uint8)
+    numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+    """ print("v4h_subscriber")
+    print(numpy_array.shape)
+    print(numpy_array.size) """
+    cv2.imshow("Image.jpg", numpy_array)
+    cv2.waitKey(1)

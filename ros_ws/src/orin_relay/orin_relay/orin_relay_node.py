@@ -4,6 +4,7 @@ from rclpy.qos import QoSProfile, HistoryPolicy, DurabilityPolicy, ReliabilityPo
 from sensor_msgs.msg import CompressedImage
 import orin_relay.utils.mmap_orin as mmap_utils
 
+
 class orin_relay_sub(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
@@ -18,7 +19,7 @@ class orin_relay_sub(Node):
         mmap_utils.open_from_v4h2_mmap()
 
     def listener_callback(self, msg):
-        self.get_logger().info("recieved:")
+        #self.get_logger().info("recieved:")
         mmap_utils.orin_sub_mmap(msg.data)
 
     def destroy_node(self):
@@ -37,7 +38,7 @@ class orin_relay_pub(Node):
         )
         #publisher
         self.publisher_ = self.create_publisher(CompressedImage, '/orin_to_v4h2', qos_profile)
-        self.timer = self.create_timer(0.02, self.timer_callback)
+        self.timer = self.create_timer(0.033, self.timer_callback)
         self.fps_counter = self.create_timer(1, self.count_fps)
         #timer callback counter
         self.i = 0

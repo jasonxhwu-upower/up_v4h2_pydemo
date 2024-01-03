@@ -57,14 +57,20 @@ def orin_pub_mmap(width=1280, height=720):
     data = mmap_file_inference.read()
     if not data:
         print(f"Warning: mmap from inferencing is empty")
-        numpy_array = np.zeros((1280, 720, 3), dtype=np.uint8)
+        numpy_array = np.zeros((height, width, 3), dtype=np.uint8)
     else:
         numpy_array = np.frombuffer(data, dtype=np.uint8).reshape((height, width, 3))
+    
+    #print(numpy_array.size)
+    #print(numpy_array.shape)
     return cv2.imencode('.jpg', numpy_array, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
     
 #orin subscriber. Takes the ros2 data, decompresses it, and then writes it to mmap
 def orin_sub_mmap(data):
     numpy_array = np.frombuffer(data, np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+    """ print("orin_subscriber")
+    print(numpy_array.size)
+    print(numpy_array.shape) """
     mmap_file_v4h.seek(0)
     mmap_file_v4h.write(numpy_array.data)
