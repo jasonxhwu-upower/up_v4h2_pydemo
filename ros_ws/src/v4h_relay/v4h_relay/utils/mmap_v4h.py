@@ -3,6 +3,7 @@ import os
 import numpy as np
 import mmap
 import time
+import array
 
 mmap_file_path = '/home/ubuntu/front_cam/image_buffer_out.dat'
 mmap_frontcam = None
@@ -51,7 +52,7 @@ def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/im
     else:
         image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2RGB_YUYV)
     compressed = cv2.imencode('.jpg', image_data, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
-    return compressed
+    return array.array('B', compressed.tobytes())
 
 def write_frontcam_membuf(data, width=1280, height=720):
     numpy_array = np.frombuffer(data, np.uint8)
