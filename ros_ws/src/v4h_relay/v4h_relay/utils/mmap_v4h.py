@@ -11,7 +11,7 @@ mmap_frontcam = None
 file_handle = None
 size = 1280 * 720 * 2
 
-thread_lock = threading.RLock()
+thread_lock = threading.Lock()
 
 def open_frontcam_mmap():
     global mmap_frontcam, file_handle

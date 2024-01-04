@@ -59,7 +59,7 @@ class v4h2_relay_sub(Node):
         return super().destroy_node()
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.MultiThreadedExecutor()
+    executor = rclpy.executors.SingleThreadedExecutor()
     v4h2_pub = v4h2_relay_pub()
     v4h2_sub = v4h2_relay_sub()
 
