@@ -44,7 +44,7 @@ def close_frontcam_mmap():
         time.sleep(0.01)
               
 
-def read_frontcam_membuf(width=1280, height=720, path='/home/ubuntu/front_cam/image_buffer_out.dat', bgr=True):
+def read_frontcam_membuf(width=1280, height=720, bgr=True):
     with thread_lock:
         mmap_frontcam.seek(0)
         data = mmap_frontcam.read()
@@ -68,9 +68,6 @@ def frontcam_sub_show(data):
     
     numpy_array = np.frombuffer(data, np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
-    """ print("v4h_subscriber")
-    print(numpy_array.shape)
-    print(numpy_array.size) """
     with thread_lock:
         cv2.imshow("Video", numpy_array)
         cv2.waitKey(1)
