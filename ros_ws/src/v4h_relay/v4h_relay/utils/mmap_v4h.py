@@ -42,19 +42,24 @@ def close_frontcam_mmap():
     except (FileNotFoundError, OSError) as e:
         print(f"Error: {e}")
         time.sleep(0.01)
-              
 
-def read_frontcam_membuf(width=1280, height=720, bgr=True):
+def read_frontcam_membuf(width=1280, height=720, format="yuyv"):
     with thread_lock:
         mmap_frontcam.seek(0)
         data = mmap_frontcam.read()
     numpy_array = np.frombuffer(data, dtype=np.uint8)
     #numpy_array = np.clip(numpy_array, 0, 255)
     numpy_array = numpy_array.reshape((height, width, 2))
-    if bgr:
-        image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2BGR_YUYV)
-    else:
-        image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2RGB_YUYV)
+    match format:
+        case "bgr":
+                image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2BGR_YUYV)
+        case "rgb":
+                image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2RGB_YUYV)
+        case "yuyv":
+                image_data = numpy_array
+        case _ :
+            print("Image format from read_frontcam_membuf is incorrect (not bgr, rgb, or yuyv) \n")
+            quit()
     compressed = cv2.imencode('.jpg', image_data, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
     return array.array('B', compressed.tobytes())
 
