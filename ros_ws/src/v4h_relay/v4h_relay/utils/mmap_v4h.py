@@ -50,16 +50,14 @@ def read_frontcam_membuf(width=1280, height=720, format="yuyv"):
     numpy_array = np.frombuffer(data, dtype=np.uint8)
     #numpy_array = np.clip(numpy_array, 0, 255)
     numpy_array = numpy_array.reshape((height, width, 2))
-    match format:
-        case "bgr":
-                image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2BGR_YUYV)
-        case "rgb":
-                image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2RGB_YUYV)
-        case "yuyv":
-                image_data = numpy_array
-        case _ :
-            print("Image format from read_frontcam_membuf is incorrect (not bgr, rgb, or yuyv) \n")
-            quit()
+    if (format == "bgr"):
+        image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2BGR_YUYV)
+    elif (format == "rgb"):
+        image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2RGB_YUYV)
+    elif (format == "yuyv"):
+        image_data = numpy_array
+    else:
+        image_data = numpy_array
     compressed = cv2.imencode('.jpg', image_data, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
     return array.array('B', compressed.tobytes())
 
