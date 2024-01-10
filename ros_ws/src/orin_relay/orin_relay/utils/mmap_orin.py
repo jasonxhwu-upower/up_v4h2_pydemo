@@ -86,7 +86,8 @@ def orin_pub_mmap(width=1280, height=720):
 def orin_sub_mmap(data):
     numpy_array = np.frombuffer(data, np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
-
+    #convert to rgb
+    image_data = cv2.cvtColor(numpy_array, cv2.COLOR_YUV2BGR_YUYV)
     with thread_lock:
         mmap_file_v4h.seek(0)
-        mmap_file_v4h.write(numpy_array.data)
+        mmap_file_v4h.write(image_data.data)
