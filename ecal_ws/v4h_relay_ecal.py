@@ -18,6 +18,8 @@ if __name__ == "__main__":
   pub = ProtoPublisher("compressed_image_protobuf_topic"
                       , compressed_image_pb2.CompressedImage)
   
+  mmap_utils.open_frontcam_mmap()
+
   # Infinite loop (using ecal_core.ok() will enable us to gracefully shutdown
   # the process from another application)
   while ecal_core.ok():
@@ -31,6 +33,7 @@ if __name__ == "__main__":
     
     # Sleep 0.033s, 30 FPS
     time.sleep(0.033)
-  
+
+  mmap_utils.close_frontcam_mmap()
   # finalize eCAL API
   ecal_core.finalize()
