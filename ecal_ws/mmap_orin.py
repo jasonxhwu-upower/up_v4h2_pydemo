@@ -9,9 +9,9 @@ size = 1280 * 720 * 3
 
 # Used by orin_pub
 #mmap_inf_path = '/home/nvidia/mmap_exchange/orin_to_v4h2.dat'
-mmap_inf_path = '/home/nvidia/mmap_exchange/orin_to_v4h2.dat'
+mmap_inf_path = '/home/lawrencexu/mmap_exchange/orin_to_v4h2.dat'
 # Used by orin_sub
-mmap_v4h_path = '/home/nvidia/mmap_exchange/v4h2_to_orin.dat'
+mmap_v4h_path = '/home/lawrencexu/mmap_exchange/v4h2_to_orin.dat'
 
 # mmap to be used
 mmap_file_inference = None
