@@ -9,12 +9,14 @@ import proto_messages.compressed_image_pb2 as compressed_image_pb2
 
 import mmap_v4h as mmap_utils
 import cv2
+import numpy as np
 
 # Callback for receiving messages
 def callback(topic_name, compressed_image_protobuf_message, time):
   print("Getting Image Data with format {} from Orin".format(
     compressed_image_protobuf_message.format))
-  mmap_utils.frontcam_sub_show(compressed_image_protobuf_message.data)
+  print(np.array(compressed_image_protobuf_message.data)[0:10])
+  mmap_utils.frontcam_sub_show(np.array(compressed_image_protobuf_message.data))
 
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be
