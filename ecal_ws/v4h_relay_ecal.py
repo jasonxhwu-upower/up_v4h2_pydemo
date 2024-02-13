@@ -44,7 +44,7 @@ if __name__ == "__main__":
   mmap_utils.frontcam_sub_create()
 
   # Set the Callback
-  sub.set_callback(callback)
+  # sub.set_callback(callback)
 
   # Infinite loop (using ecal_core.ok() will enable us to gracefully shutdown
   # the process from another application)
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     image_data_from_orin = np.array(sub.receive(33)[1].data)
     if (np.size(image_data_from_orin) != 0):
         make_plot(image_data_from_orin)
-    
+
     # Sleep 0.033s, 30 FPS
     time.sleep(0.033)
 
