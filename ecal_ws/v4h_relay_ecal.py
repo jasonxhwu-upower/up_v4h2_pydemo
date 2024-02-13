@@ -18,6 +18,16 @@ def callback(topic_name, compressed_image_protobuf_message, time):
   print(np.array(compressed_image_protobuf_message.data)[0:10])
   mmap_utils.frontcam_sub_show(np.array(compressed_image_protobuf_message.data))
 
+def make_plot(image_data):
+    print(image_data)
+    numpy_array = image_data.astype(np.uint8)
+    print(np.size(numpy_array))
+    numpy_array = cv2.imdecode(numpy_array, 0)
+    print(np.size(numpy_array))
+    cv2.imshow('image', numpy_array)
+    #filename = 'savedImage.jpg'
+    #cv2.imwrite(filename, numpy_array)
+
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be
   # "V4H eCAL CompressedImage Protobuf Publisher"
@@ -46,6 +56,10 @@ if __name__ == "__main__":
 
     # actually send the message to the topic this publisher was created for
     pub.send(compressed_image_protobuf_message)
+
+    image_data_from_orin = np.array(sub.receive(33)[1].data)
+    if (np.size(image_data_from_orin) != 0):
+        make_plot(image_data_from_orin)
     
     # Sleep 0.033s, 30 FPS
     time.sleep(0.033)
