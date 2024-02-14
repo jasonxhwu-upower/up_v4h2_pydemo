@@ -39,7 +39,9 @@ if __name__ == "__main__":
     # Create a message and fill it with some data
     compressed_image_protobuf_message = compressed_image_pb2.CompressedImage()
     compressed_image_protobuf_message.format = "jpeg"
-    compressed_image_protobuf_message.data.extend(mmap_utils.orin_pub_mmap())
+    orin_inferenced_img = mmap_utils.orin_pub_mmap()
+    print(orin_inferenced_img[0:30])
+    compressed_image_protobuf_message.data.extend(orin_inferenced_img)
 
     # actually send the message to the topic this publisher was created for
     pub.send(compressed_image_protobuf_message)

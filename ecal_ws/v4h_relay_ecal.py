@@ -19,11 +19,14 @@ def callback(topic_name, compressed_image_protobuf_message, time):
   mmap_utils.frontcam_sub_show(np.array(compressed_image_protobuf_message.data))
 
 def make_plot(image_data):
-    print(image_data)
+    print("---------------------------------------------")
+    print(image_data[0:30])
+    print(np.size(image_data))
     numpy_array = image_data.astype(np.uint8)
+    print(numpy_array[0:30])
     print(np.size(numpy_array))
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
-    print(np.size(numpy_array))
+    # print(np.size(numpy_array))
     cv2.imshow('image', numpy_array)
     #filename = 'savedImage.jpg'
     #cv2.imwrite(filename, numpy_array)
