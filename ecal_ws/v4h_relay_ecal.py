@@ -22,11 +22,12 @@ def make_plot(image_data):
     print(image_data)
     numpy_array = image_data.astype(np.uint8)
     print(np.size(numpy_array))
-    numpy_array = cv2.imdecode(numpy_array, 0)
+    numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
     print(np.size(numpy_array))
     cv2.imshow('image', numpy_array)
     #filename = 'savedImage.jpg'
     #cv2.imwrite(filename, numpy_array)
+    cv2.waitKey(1)
 
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be
@@ -41,7 +42,7 @@ if __name__ == "__main__":
                       , compressed_image_pb2.CompressedImage)
 
   mmap_utils.open_frontcam_mmap()
-  mmap_utils.frontcam_sub_create()
+  # mmap_utils.frontcam_sub_create()
 
   # Set the Callback
   # sub.set_callback(callback)
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     time.sleep(0.033)
 
   mmap_utils.close_frontcam_mmap()
-  mmap_utils.frontcam_sub_close()
+  # mmap_utils.frontcam_sub_close()
 
   # finalize eCAL API
   ecal_core.finalize()
