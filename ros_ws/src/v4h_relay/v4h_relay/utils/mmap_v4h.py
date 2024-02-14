@@ -5,13 +5,16 @@ import mmap
 import time
 import array
 import threading
+import queue
 
 mmap_file_path = '/home/ubuntu/front_cam/image_buffer_out.dat'
+frame_queue = queue.Queue(maxsize=1280)
+FRAME_RATE = 30
 mmap_frontcam = None
 file_handle = None
 size = 1280 * 720 * 2
 
-thread_lock = threading.Lock()
+thread_lock = threading.RLock()
 
 def open_frontcam_mmap():
     global mmap_frontcam, file_handle
@@ -64,10 +67,25 @@ def frontcam_sub_create():
 def frontcam_sub_close():
     cv2.destroyWindow("Video")
 
-def frontcam_sub_show(data):
-    
+#returns the image (rgb) in numpy format
+def frontcam_sub_process(data):    
     numpy_array = np.frombuffer(data, np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+    return numpy_array
+
+def frontcam_sub_queue_add(data):
+    global frame_queue 
     with thread_lock:
-        cv2.imshow("Video", numpy_array)
-        cv2.waitKey(1)
+        try:
+            frame_queue.put(data, block = True, timeout = 1.0 / 30.0)
+        except queue.Full:
+            dropped_frame = frame_queue.get_nowait()
+            print("Queue is full. Dropping frame:", dropped_frame)
+            
+
+def frontcam_sub_show():
+    with thread_lock:
+        if not frame_queue.empty():
+            frame_data = frame_queue.get_nowait()
+            cv2.imshow("Video", frame_data)
+            cv2.waitKey(1)

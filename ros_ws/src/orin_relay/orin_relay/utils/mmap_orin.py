@@ -79,7 +79,7 @@ def orin_pub_mmap(width=1280, height=720):
     else:
         numpy_array = np.frombuffer(data, dtype=np.uint8).reshape((height, width, 3))
     
-    compressed = cv2.imencode('.jpg', numpy_array, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
+    compressed = cv2.imencode('.jpg', numpy_array, [int(cv2.IMWRITE_JPEG_QUALITY), 90])[1]
     return array.array('B', compressed.tobytes()) 
     
 #orin subscriber. Takes the ros2 data, decompresses it, and then writes it to mmap

@@ -50,16 +50,21 @@ class v4h2_relay_sub(Node):
         )
         mmap_utils.frontcam_sub_create()
         self.subscription = self.create_subscription(CompressedImage, '/orin_to_v4h2', self.listener_callback, qos_profile)
-    
+        self.timer = self.create_timer(0.033, self.timer_callback)
+
     def listener_callback(self, msg):
-        mmap_utils.frontcam_sub_show(msg.data)
+        image_data = mmap_utils.frontcam_sub_process(msg.data)
+        mmap_utils.frontcam_sub_queue_add(image_data)
+
+    def timer_callback(self):
+        mmap_utils.frontcam_sub_show()
 
     def destroy_node(self):
         mmap_utils.frontcam_sub_close()
         return super().destroy_node()
 def main(args=None):
     rclpy.init(args=args)
-    executor = rclpy.executors.SingleThreadedExecutor()
+    executor = rclpy.executors.MultiThreadedExecutor()
     v4h2_pub = v4h2_relay_pub()
     v4h2_sub = v4h2_relay_sub()
 
