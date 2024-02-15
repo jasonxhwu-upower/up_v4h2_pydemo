@@ -58,3 +58,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 ros_ws/*.jpg
+ecal_ws/proto_messages/__pycache__/*
+ecal_ws/__pycache__/*
