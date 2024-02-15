@@ -78,15 +78,16 @@ def orin_pub_mmap(width=1280, height=720):
         numpy_array = np.zeros((height, width, 3), dtype=np.uint8)
     else:
         numpy_array = np.frombuffer(data, dtype=np.uint8).reshape((height, width, 3))
-    
+     
+    #cv2.imwrite("orin_image_after_inference.jpeg", numpy_array)
     compressed = cv2.imencode('.jpg', numpy_array, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
     return array.array('B', compressed.tobytes()) 
     
 #orin subscriber. Takes the ros2 data, decompresses it, and then writes it to mmap
 def orin_sub_mmap(data):
-    numpy_array = np.frombuffer(data, np.uint8)
+    data = np.array(data)
+    numpy_array = data.astype(np.uint8) 
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
-
     with thread_lock:
         mmap_file_v4h.seek(0)
         mmap_file_v4h.write(numpy_array.data)

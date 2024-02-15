@@ -14,6 +14,7 @@ import mmap_orin as mmap_utils
 def callback(topic_name, compressed_image_protobuf_message, time):
   print("Getting Image Data with format {} from V4H".format(
     compressed_image_protobuf_message.format))
+  mmap_utils.orin_sub_mmap(compressed_image_protobuf_message.data)
 #   print(compressed_image_protobuf_message.data[:29])
 
 if __name__ == "__main__":
