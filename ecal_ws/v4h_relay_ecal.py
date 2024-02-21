@@ -15,7 +15,7 @@ import numpy as np
 def callback(topic_name, compressed_image_protobuf_message, time):
   print("Getting Image Data with format {} from Orin".format(
     compressed_image_protobuf_message.format))
-  print(np.array(compressed_image_protobuf_message.data)[0:10])
+  # print(np.array(compressed_image_protobuf_message.data)[0:10])
   mmap_utils.frontcam_sub_show(np.array(compressed_image_protobuf_message.data))
 
 def make_plot(image_data):

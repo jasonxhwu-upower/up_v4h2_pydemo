@@ -68,7 +68,6 @@ def frontcam_sub_show(data):
     
     numpy_array = data.astype(np.uint8)
     numpy_array = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
-    print(numpy_array)
     with thread_lock:
         cv2.imshow("Video", numpy_array)
         cv2.waitKey(1)
